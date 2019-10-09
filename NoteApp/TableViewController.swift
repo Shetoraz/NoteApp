@@ -12,16 +12,11 @@ class TableViewController: UITableViewController {
         
         notes.append(first)
         notes.append(second)
- 
+        
     }
     override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
         return 75.0
     }
-    
-//    override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-//        return UITableView.automaticDimension
-//    }
-    
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return notes.count
@@ -89,7 +84,6 @@ class TableViewController: UITableViewController {
             self.tableView.reloadData()
             self.tableView.beginUpdates()
             self.tableView.endUpdates()
-            
         }
         
         let cancel = UIAlertAction(title: "Cancel", style: .default) { (action) in
@@ -98,10 +92,8 @@ class TableViewController: UITableViewController {
         alert.addAction(add)
         alert.addAction(cancel)
         present(alert, animated: true)
-        
-
     }
-   
+    
 }
 
 
