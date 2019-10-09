@@ -3,12 +3,14 @@ import UIKit
 class TableViewController: UITableViewController {
     
     var notes = [Note]()
-
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-    }    
+        
+    }
+    
+    //MARK: TABLEVIEW METHODS
+    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return notes.count
     }
@@ -36,8 +38,8 @@ class TableViewController: UITableViewController {
         
         notes[indexPath.row].isExpanded =  !notes[indexPath.row].isExpanded
         
-        if notes[indexPath.row].isExpanded   {
-             tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 0
+        if notes[indexPath.row].isExpanded {
+            tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 0
         } else {
             tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 2
         }
@@ -45,7 +47,10 @@ class TableViewController: UITableViewController {
         tableView.beginUpdates()
         tableView.endUpdates()
         self.tableView.deselectRow(at: indexPath, animated: true)
+        
     }
+    
+    //MARK: ADD BUTTON
     
     @IBAction func addPressed(_ sender: UIBarButtonItem) {
         
@@ -78,8 +83,11 @@ class TableViewController: UITableViewController {
             } else {
                 newNote.body = bodyField.text!
             }
+            
             self.notes.append(newNote)
+            
             self.tableView.reloadData()
+            
             self.tableView.beginUpdates()
             self.tableView.endUpdates()
         }
@@ -87,6 +95,7 @@ class TableViewController: UITableViewController {
         let cancel = UIAlertAction(title: "Cancel", style: .default) { (action) in
             self.tableView.reloadData()
         }
+        
         alert.addAction(add)
         alert.addAction(cancel)
         present(alert, animated: true)
