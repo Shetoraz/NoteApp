@@ -3,21 +3,12 @@ import UIKit
 class TableViewController: UITableViewController {
     
     var notes = [Note]()
-    
-    let first  = Note(title: "Store", body: "Buy some milk")
-    let second = Note(title: "School", body: "Make Homework")
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
-        notes.append(first)
-        notes.append(second)
-        
-    }
-    override func tableView(_ tableView: UITableView, estimatedHeightForRowAt indexPath: IndexPath) -> CGFloat {
-        return 75.0
-    }
-    
+
+    }    
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return notes.count
     }
@@ -42,8 +33,15 @@ class TableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 0
-        tableView.rowHeight = UITableView.automaticDimension
+        
+        notes[indexPath.row].isExpanded =  !notes[indexPath.row].isExpanded
+        
+        if notes[indexPath.row].isExpanded   {
+             tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 0
+        } else {
+            tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 2
+        }
+        
         tableView.beginUpdates()
         tableView.endUpdates()
         self.tableView.deselectRow(at: indexPath, animated: true)
