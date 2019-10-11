@@ -4,6 +4,10 @@ class TableViewController: UITableViewController {
     
     var notes = [Note]()
     
+    // Cells colors. Can be changed with simple copy/paste HEX code.
+    
+    var colors: [String] =  ["#b9e7c3", "#d7eaae", " #f9f1a6", "#ffe39f", "#ffc78e"]
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -20,6 +24,7 @@ class TableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "noteCell", for: indexPath)
         
         cell.textLabel?.text = notes[indexPath.row].title
+        cell.backgroundColor = notes[indexPath.row].color
         cell.detailTextLabel?.text = notes[indexPath.row].body
         
         return cell
@@ -41,7 +46,7 @@ class TableViewController: UITableViewController {
         if notes[indexPath.row].isExpanded {
             tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 0
         } else {
-            tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 2
+            tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 1
         }
         
         tableView.beginUpdates()
@@ -60,11 +65,11 @@ class TableViewController: UITableViewController {
         let alert = UIAlertController(title: "New note", message: "", preferredStyle: .alert)
         
         alert.addTextField { (alertText) in
-            alertText.placeholder = "Name"
+            alertText.placeholder = "Theme"
             titleField = alertText
         }
         alert.addTextField { (alertText) in
-            alertText.placeholder = "Body"
+            alertText.placeholder = "Text"
             bodyField = alertText
         }
         
@@ -83,6 +88,7 @@ class TableViewController: UITableViewController {
             } else {
                 newNote.body = bodyField.text!
             }
+            newNote.color = UIColor(hexString: self.colors.randomElement()!)
             
             self.notes.append(newNote)
             
@@ -99,11 +105,32 @@ class TableViewController: UITableViewController {
         alert.addAction(add)
         alert.addAction(cancel)
         present(alert, animated: true)
+        
     }
     
 }
 
+//MARK: Translator extenstion (HEX - UICOLOR)
 
+extension UIColor {
+    convenience init(hexString: String) {
+        let hex = hexString.trimmingCharacters(in: CharacterSet.alphanumerics.inverted)
+        var int = UInt32()
+        Scanner(string: hex).scanHexInt32(&int)
+        let a, r, g, b: UInt32
+        switch hex.count {
+        case 3: // RGB (12-bit)
+            (a, r, g, b) = (255, (int >> 8) * 17, (int >> 4 & 0xF) * 17, (int & 0xF) * 17)
+        case 6: // RGB (24-bit)
+            (a, r, g, b) = (255, int >> 16, int >> 8 & 0xFF, int & 0xFF)
+        case 8: // ARGB (32-bit)
+            (a, r, g, b) = (int >> 24, int >> 16 & 0xFF, int >> 8 & 0xFF, int & 0xFF)
+        default:
+            (a, r, g, b) = (255, 0, 0, 0)
+        }
+        self.init(red: CGFloat(r) / 255, green: CGFloat(g) / 255, blue: CGFloat(b) / 255, alpha: CGFloat(a) / 255)
+    }
+}
 
 
 
