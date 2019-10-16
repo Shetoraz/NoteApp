@@ -1,8 +1,11 @@
 import UIKit
+import RealmSwift
 
 class TableViewController: UITableViewController {
     
-    var notes = [Note]()
+    let realm = try! Realm()
+    
+    var notes : Results<Note>?
     
     // Cells colors. Can be changed with simple copy/paste HEX code.
     
@@ -11,39 +14,57 @@ class TableViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        loadItems()
+        
     }
     
     //MARK: TABLEVIEW METHODS
     
     override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return notes.count
+        return notes?.count ?? 1
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = tableView.dequeueReusableCell(withIdentifier: "noteCell", for: indexPath)
         
-        cell.textLabel?.text = notes[indexPath.row].title
-        cell.backgroundColor = notes[indexPath.row].color
-        cell.detailTextLabel?.text = notes[indexPath.row].body
+        cell.textLabel?.text = notes?[indexPath.row].title
+        cell.backgroundColor = UIColor(hexString: notes?[indexPath.row].color! ?? "#d7eaae")
+        cell.detailTextLabel?.text = notes?[indexPath.row].body
         
         return cell
     }
     
+    //MARK: DELETING
+    
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
         
         if editingStyle == .delete {
-            
-            notes.remove(at: indexPath.row)
+            do {
+                try realm.write {
+                    realm.delete((notes?[indexPath.row])!)
+                }
+            } catch {
+                print ("DELETING Error", error)
+            }
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
     
+    //FIXME: FIX EXPANDING AFTER APP RESTART
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
-        notes[indexPath.row].isExpanded =  !notes[indexPath.row].isExpanded
+        if let item = notes?[indexPath.row] {
+        do {
+            try realm.write {
+                item.isExpanded = !item.isExpanded
+            }
+        } catch {
+            print ("SELECTED Error", error) 
+        }
         
-        if notes[indexPath.row].isExpanded {
+        if item.isExpanded {
             tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 0
         } else {
             tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 1
@@ -52,6 +73,7 @@ class TableViewController: UITableViewController {
         tableView.beginUpdates()
         tableView.endUpdates()
         self.tableView.deselectRow(at: indexPath, animated: true)
+        }
         
     }
     
@@ -75,7 +97,7 @@ class TableViewController: UITableViewController {
         
         let add = UIAlertAction(title: "Add", style: .default) { (action) in
             
-            var newNote = Note()
+            let newNote = Note()
             
             if titleField.text!.isEmpty {
                 newNote.title = "Empty"
@@ -88,9 +110,15 @@ class TableViewController: UITableViewController {
             } else {
                 newNote.body = bodyField.text!
             }
-            newNote.color = UIColor(hexString: self.colors.randomElement()!)
+            newNote.color = self.colors.randomElement()!
             
-            self.notes.append(newNote)
+            do {
+                try self.realm.write {
+                    self.realm.add(newNote)
+                }
+            } catch {
+                print("SAVING ERROR", error)
+            }
             
             self.tableView.reloadData()
             
@@ -108,9 +136,15 @@ class TableViewController: UITableViewController {
         
     }
     
+    //MARK: LOAD ITEMS
+    
+    func loadItems() {
+        notes = realm.objects(Note.self)
+        tableView.reloadData()
+    }
 }
 
-//MARK: Translator extenstion (HEX - UICOLOR)
+    //MARK: Translator extenstion (HEX - UICOLOR)
 
 extension UIColor {
     convenience init(hexString: String) {

@@ -1,8 +1,9 @@
 import UIKit
+import RealmSwift
 
-struct Note {
-    var title: String?
-    var body: String?
-    var isExpanded = false
-    var color: UIColor?
+class Note:Object {
+   @objc dynamic var title: String? = ""
+   @objc dynamic var body: String? = ""
+   @objc dynamic var isExpanded = false
+   @objc dynamic var color: String? = ""
 }
