@@ -50,27 +50,27 @@ class TableViewController: UITableViewController {
             tableView.deleteRows(at: [indexPath], with: .fade)
         }
     }
-        
+    
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         if let item = notes?[indexPath.row] {
-        do {
-            try realm.write {
-                item.isExpanded = !item.isExpanded
+            do {
+                try realm.write {
+                    item.isExpanded = !item.isExpanded
+                }
+            } catch {
+                print ("SELECTED Error", error) 
             }
-        } catch {
-            print ("SELECTED Error", error) 
-        }
-        
-        if item.isExpanded {
-            tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 0
-        } else {
-            tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 1
-        }
-        
-        tableView.beginUpdates()
-        tableView.endUpdates()
-        self.tableView.deselectRow(at: indexPath, animated: true)
+            
+            if item.isExpanded {
+                tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 0
+            } else {
+                tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 1
+            }
+            
+            tableView.beginUpdates()
+            tableView.endUpdates()
+            self.tableView.deselectRow(at: indexPath, animated: true)
         }
         
     }
@@ -142,7 +142,7 @@ class TableViewController: UITableViewController {
     }
 }
 
-    //MARK: Translator extenstion (HEX - UICOLOR)
+//MARK: Translator extenstion (HEX - UICOLOR)
 
 extension UIColor {
     convenience init(hexString: String) {
