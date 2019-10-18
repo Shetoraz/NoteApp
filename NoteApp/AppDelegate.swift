@@ -11,7 +11,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         print(realm.configuration.fileURL!)
         
-        // Override point for customization after application launch.
+        //UNEXPAND EVERY CELL
+        for item in realm.objects(Note.self) {
+            do {
+                try realm.write {
+                    item.isExpanded = false
+                }
+            } catch {
+                print("")
+            }
+        }
+        
         return true
     }
 
@@ -34,9 +44,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     }
 
     func applicationWillTerminate(_ application: UIApplication) {
-      
-    }
-
-
+  
 }
-
+    
+}
