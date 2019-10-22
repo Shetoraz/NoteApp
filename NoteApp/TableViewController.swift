@@ -35,20 +35,60 @@ class TableViewController: UITableViewController {
         return cell
     }
     
-    //MARK: DELETING
+    //MARK: SWIPE ACTIONS
     
-    override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
+    override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
         
-        if editingStyle == .delete {
+        //SUBMARK: EDIT
+        
+        let editAction = UITableViewRowAction(style: .default, title: "Edit") { (action, indexPath) in
+            
+            let editMenu = UIAlertController(title: "Edit note", message: "", preferredStyle: .alert)
+            
+            editMenu.addTextField { (titleField) in
+                titleField.text = self.notes?[indexPath.row].title
+                
+            }
+            editMenu.addTextField { (bodyField) in
+                bodyField.text = self.notes?[indexPath.row].body
+                
+            }
+            let saveAction = UIAlertAction(title: "Save", style: .cancel) { (action) in
+                let titl = editMenu.textFields![0]
+                try! self.realm.write {
+                    (self.notes?[indexPath.row].title = titl.text)!
+                }
+                let body = editMenu.textFields![1]
+                try! self.realm.write {
+                    (self.notes?[indexPath.row].body = body.text)!
+                }
+                tableView.reloadData()
+            }
+            let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
+            
+            editMenu.addAction(cancelAction)
+            editMenu.addAction(saveAction)
+            
+            self.present(editMenu, animated: true, completion: nil)
+            
+        }
+        
+        //SUBMARK: DELETE
+        
+        let deleteAction = UITableViewRowAction(style: .default, title: "Delete") { (action, indexPath) in
             do {
-                try realm.write {
-                    realm.delete((notes?[indexPath.row])!)
+                try self.realm.write {
+                    self.realm.delete((self.notes?[indexPath.row])!)
                 }
             } catch {
-                print ("DELETING Error", error)
+                print ("Deleting Error", error)
             }
-            tableView.deleteRows(at: [indexPath], with: .fade)
+            self.tableView.deleteRows(at: [indexPath], with: .fade)
         }
+        
+        deleteAction.backgroundColor = .red
+        editAction.backgroundColor = UIColor(hexString: "#4BB9D4")
+        return [deleteAction, editAction]
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -80,17 +120,26 @@ class TableViewController: UITableViewController {
     @IBAction func addPressed(_ sender: UIBarButtonItem) {
         
         var titleField = UITextField()
-        var bodyField  = UITextField()
+        let textView = UITextView(frame: .zero)
+        textView.autoresizingMask = [.flexibleWidth, .flexibleHeight]
+        
+        let controller = UIViewController()
+        textView.frame = controller.view.frame
+        
+        controller.view.addSubview(textView)
         
         let alert = UIAlertController(title: "New note", message: "", preferredStyle: .alert)
+        alert.setValue(controller, forKey: "contentViewController")
+        
+        let height: NSLayoutConstraint = NSLayoutConstraint(item: alert.view!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: view.frame.height * 0.3)
+        
+        alert.view.addConstraint(height)
+        
+        //SUBMARK: ELEMENTS IN ALERT
         
         alert.addTextField { (alertText) in
             alertText.placeholder = "Theme"
             titleField = alertText
-        }
-        alert.addTextField { (alertText) in
-            alertText.placeholder = "Text"
-            bodyField = alertText
         }
         
         let add = UIAlertAction(title: "Add", style: .default) { (action) in
@@ -103,16 +152,17 @@ class TableViewController: UITableViewController {
                 newNote.title = titleField.text!
             }
             
-            if bodyField.text!.isEmpty {
+            if textView.text!.isEmpty {
                 newNote.body = "Empty"
             } else {
-                newNote.body = bodyField.text!
+                newNote.body = textView.text!
             }
             newNote.color = self.colors.randomElement()!
             
             do {
                 try self.realm.write {
                     self.realm.add(newNote)
+                    textView.text = ""
                 }
             } catch {
                 print("SAVING ERROR", error)
@@ -130,6 +180,7 @@ class TableViewController: UITableViewController {
         
         alert.addAction(add)
         alert.addAction(cancel)
+        
         present(alert, animated: true)
         
     }
