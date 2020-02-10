@@ -8,6 +8,8 @@
 
 /* Begin PBXBuildFile section */
 		62BCE63B9B4A6B496AE010D6 /* Pods_NoteApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = ADE3DA2EA49AF2B5008F7E6D /* Pods_NoteApp.framework */; };
+		A9D8A33D23F1CEFA00BD59CE /* UIColor+Hex.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D8A33C23F1CEFA00BD59CE /* UIColor+Hex.swift */; };
+		A9D8A34023F1D07B00BD59CE /* Model.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9D8A33F23F1D07B00BD59CE /* Model.swift */; };
 		A9E4D960234BA22E00EB7BD0 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = A9E4D95F234BA22E00EB7BD0 /* AppDelegate.swift */; };
 		A9E4D965234BA22E00EB7BD0 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = A9E4D963234BA22E00EB7BD0 /* Main.storyboard */; };
 		A9E4D967234BA23000EB7BD0 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = A9E4D966234BA23000EB7BD0 /* Assets.xcassets */; };
@@ -18,6 +20,8 @@
 
 /* Begin PBXFileReference section */
 		8599CC10DE8934724252BD4B /* Pods-NoteApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-NoteApp.debug.xcconfig"; path = "Target Support Files/Pods-NoteApp/Pods-NoteApp.debug.xcconfig"; sourceTree = "<group>"; };
+		A9D8A33C23F1CEFA00BD59CE /* UIColor+Hex.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+Hex.swift"; sourceTree = "<group>"; };
+		A9D8A33F23F1D07B00BD59CE /* Model.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Model.swift; sourceTree = "<group>"; };
 		A9E4D95C234BA22E00EB7BD0 /* NoteApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = NoteApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		A9E4D95F234BA22E00EB7BD0 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		A9E4D964234BA22E00EB7BD0 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -59,6 +63,42 @@
 			path = Pods;
 			sourceTree = "<group>";
 		};
+		A9D8A33E23F1CF0800BD59CE /* Extensions */ = {
+			isa = PBXGroup;
+			children = (
+				A9D8A33C23F1CEFA00BD59CE /* UIColor+Hex.swift */,
+			);
+			path = Extensions;
+			sourceTree = "<group>";
+		};
+		A9D8A34323F1D18000BD59CE /* Resources */ = {
+			isa = PBXGroup;
+			children = (
+				A9E4D963234BA22E00EB7BD0 /* Main.storyboard */,
+				A9E4D966234BA23000EB7BD0 /* Assets.xcassets */,
+				A9E4D968234BA23000EB7BD0 /* LaunchScreen.storyboard */,
+				A9E4D96B234BA23000EB7BD0 /* Info.plist */,
+			);
+			path = Resources;
+			sourceTree = "<group>";
+		};
+		A9D8A34423F1D31000BD59CE /* Main Scene */ = {
+			isa = PBXGroup;
+			children = (
+				A9E4D971234BA37C00EB7BD0 /* TableViewController.swift */,
+				A9D8A33F23F1D07B00BD59CE /* Model.swift */,
+			);
+			path = "Main Scene";
+			sourceTree = "<group>";
+		};
+		A9D8A34523F1D35200BD59CE /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				A9E4D973234BA51A00EB7BD0 /* Note.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
 		A9E4D953234BA22E00EB7BD0 = {
 			isa = PBXGroup;
 			children = (
@@ -81,12 +121,10 @@
 			isa = PBXGroup;
 			children = (
 				A9E4D95F234BA22E00EB7BD0 /* AppDelegate.swift */,
-				A9E4D971234BA37C00EB7BD0 /* TableViewController.swift */,
-				A9E4D963234BA22E00EB7BD0 /* Main.storyboard */,
-				A9E4D973234BA51A00EB7BD0 /* Note.swift */,
-				A9E4D966234BA23000EB7BD0 /* Assets.xcassets */,
-				A9E4D968234BA23000EB7BD0 /* LaunchScreen.storyboard */,
-				A9E4D96B234BA23000EB7BD0 /* Info.plist */,
+				A9D8A34423F1D31000BD59CE /* Main Scene */,
+				A9D8A33E23F1CF0800BD59CE /* Extensions */,
+				A9D8A34323F1D18000BD59CE /* Resources */,
+				A9D8A34523F1D35200BD59CE /* Model */,
 			);
 			path = NoteApp;
 			sourceTree = "<group>";
@@ -206,7 +244,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				A9D8A34023F1D07B00BD59CE /* Model.swift in Sources */,
 				A9E4D960234BA22E00EB7BD0 /* AppDelegate.swift in Sources */,
+				A9D8A33D23F1CEFA00BD59CE /* UIColor+Hex.swift in Sources */,
 				A9E4D974234BA51A00EB7BD0 /* Note.swift in Sources */,
 				A9E4D972234BA37C00EB7BD0 /* TableViewController.swift in Sources */,
 			);
@@ -357,7 +397,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9739Q97K2B;
-				INFOPLIST_FILE = NoteApp/Info.plist;
+				INFOPLIST_FILE = NoteApp/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -376,7 +416,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 9739Q97K2B;
-				INFOPLIST_FILE = NoteApp/Info.plist;
+				INFOPLIST_FILE = NoteApp/Resources/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
