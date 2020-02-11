@@ -14,10 +14,12 @@ class TableViewController: UITableViewController {
     }
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        
-        let cell = tableView.dequeueReusableCell(withIdentifier: "noteCell", for: indexPath)
+
+        let cell = UITableViewCell(style: .subtitle, reuseIdentifier: UITableViewCell.reuseIdentifier)
         if let item = self.model.notes?[indexPath.row] {
             cell.textLabel?.text = item.title
+            cell.textLabel?.font = UIFont(name: "Futura-Bold", size: 20)
+            cell.detailTextLabel?.font = UIFont(name: "Futura", size: 15)
             cell.backgroundColor = self.colors.getItemColor(item)
             cell.detailTextLabel?.text = item.body
         }
@@ -28,18 +30,18 @@ class TableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
 
-        let editAction = UITableViewRowAction(style: .default, title: "Edit") { (_ , _) in
-            let editMenu = UIAlertController(title: "Edit note",
+        let editAction = UITableViewRowAction(style: .default, title: R.string.localizable.edit()) { (_ , _) in
+            let editMenu = UIAlertController(title: R.string.localizable.editNote(),
                                              message: "",
                                              preferredStyle: .alert)
             editMenu.addTextField { (titleField) in
                 titleField.text = self.model.notes?[indexPath.row].title }
             editMenu.addTextField { (bodyField) in
                 bodyField.text = self.model.notes?[indexPath.row].body }
-            editMenu.addAction(UIAlertAction(title: "Cancel",
+            editMenu.addAction(UIAlertAction(title: R.string.localizable.cancel(),
                                              style: .destructive,
                                              handler: nil))
-            editMenu.addAction(UIAlertAction(title: "Save",
+            editMenu.addAction(UIAlertAction(title: R.string.localizable.save(),
                                              style: .cancel) { (_ ) in
                                                 if let title = editMenu.textFields?[0].text {
                                                     if let body = editMenu.textFields?[1].text {
@@ -48,7 +50,7 @@ class TableViewController: UITableViewController {
             self.present(editMenu, animated: true, completion: nil)
         }
         let deleteAction = UITableViewRowAction(style: .default,
-                                                title: "Delete") { (_ , _) in
+                                                title: R.string.localizable.delete()) { (_ , _) in
                                                     self.model.delete(indexPath.row)
                                                     self.tableView.deleteRows(at: [indexPath], with: .fade)
         }
@@ -84,8 +86,8 @@ class TableViewController: UITableViewController {
         textView.frame = controller.view.frame
         
         controller.view.addSubview(textView)
-        
-        let alert = UIAlertController(title: "New note", message: "", preferredStyle: .alert)
+
+        let alert = UIAlertController(title: R.string.localizable.newNote(), message: "", preferredStyle: .alert)
         alert.setValue(controller, forKey: "contentViewController")
         
         let height: NSLayoutConstraint = NSLayoutConstraint(item: alert.view!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: view.frame.height * 0.3)
@@ -93,18 +95,18 @@ class TableViewController: UITableViewController {
         alert.view.addConstraint(height)
 
         alert.addTextField { (alertText) in
-            alertText.placeholder = "Theme"
+            alertText.placeholder = R.string.localizable.topic()
             titleField = alertText
         }
-        alert.addAction(UIAlertAction(title: "Add", style: .default) { (_ ) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.add(), style: .default) { (_ ) in
             let newNote = Note()
             if titleField.text!.isEmpty {
-                newNote.title = "Empty"
+                newNote.title = R.string.localizable.empty()
             } else {
                 newNote.title = titleField.text!
             }
             if textView.text!.isEmpty {
-                newNote.body = "Empty"
+                newNote.body = R.string.localizable.empty()
             } else {
                 newNote.body = textView.text!
             }
@@ -113,7 +115,7 @@ class TableViewController: UITableViewController {
             self.tableView.reloadData()
             self.tableView.beginUpdates()
             self.tableView.endUpdates() })
-        alert.addAction(UIAlertAction(title: "Cancel", style: .default) { (_ ) in
+        alert.addAction(UIAlertAction(title: R.string.localizable.cancel(), style: .default) { (_ ) in
             self.tableView.reloadData()
         })
         present(alert, animated: true)
