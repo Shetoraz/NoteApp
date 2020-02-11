@@ -13,13 +13,13 @@ class Model {
     
     private let realm = try! Realm()
     var notes : Results<Note>?
-        
+    
     init() {
         self.refresh()
     }
     
     // MARK: - Realm actions
-
+    
     func refresh() {
         notes = realm.objects(Note.self)
     }
@@ -31,7 +31,7 @@ class Model {
                     self.realm.delete(item)
                 }
             } catch {
-                print ("Deleting Error", error)
+                print("Deleting Error", error)
             }
         }
     }
@@ -57,7 +57,7 @@ class Model {
             }
         }
     }
-    
+
     func edit(_ index: Int, text: String, theme: String) {
         do {
             try self.realm.write {

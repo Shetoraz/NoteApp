@@ -2,8 +2,8 @@ import UIKit
 
 class TableViewController: UITableViewController {
     
-    var model = Model()
-    var colors: [String] =  ["#b9e7c3", "#d7eaae", " #f9f1a6", "#ffe39f", "#ffc78e"]
+    let model = Model()
+    let colors = Color()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -18,7 +18,7 @@ class TableViewController: UITableViewController {
         let cell = tableView.dequeueReusableCell(withIdentifier: "noteCell", for: indexPath)
         if let item = self.model.notes?[indexPath.row] {
             cell.textLabel?.text = item.title
-            cell.backgroundColor = UIColor(hexString: item.color ?? "#d7eaae")
+            cell.backgroundColor = self.colors.getItemColor(item)
             cell.detailTextLabel?.text = item.body
         }
         return cell
@@ -27,33 +27,33 @@ class TableViewController: UITableViewController {
     // MARK: - Swipe actions
     
     override func tableView(_ tableView: UITableView, editActionsForRowAt indexPath: IndexPath) -> [UITableViewRowAction]? {
-        
-        let editAction = UITableViewRowAction(style: .default, title: "Edit") { (_ , indexPath) in
-            let editMenu = UIAlertController(title: "Edit note", message: "", preferredStyle: .alert)
+
+        let editAction = UITableViewRowAction(style: .default, title: "Edit") { (_ , _) in
+            let editMenu = UIAlertController(title: "Edit note",
+                                             message: "",
+                                             preferredStyle: .alert)
             editMenu.addTextField { (titleField) in
                 titleField.text = self.model.notes?[indexPath.row].title }
             editMenu.addTextField { (bodyField) in
                 bodyField.text = self.model.notes?[indexPath.row].body }
-            let saveAction = UIAlertAction(title: "Save", style: .cancel) { (_ ) in
-                let titl = editMenu.textFields![0]
-                let body = editMenu.textFields![1]
-                self.model.edit(indexPath.row, text: body.text!, theme: titl.text!)
-                tableView.reloadData()
-            }
-            let cancelAction = UIAlertAction(title: "Cancel", style: .destructive, handler: nil)
-            editMenu.addAction(cancelAction)
-            editMenu.addAction(saveAction)
-            
+            editMenu.addAction(UIAlertAction(title: "Cancel",
+                                             style: .destructive,
+                                             handler: nil))
+            editMenu.addAction(UIAlertAction(title: "Save",
+                                             style: .cancel) { (_ ) in
+                                                if let title = editMenu.textFields?[0].text {
+                                                    if let body = editMenu.textFields?[1].text {
+                                                        self.model.edit(indexPath.row, text: body, theme: title)
+                                                        self.tableView.reloadData() }}})
             self.present(editMenu, animated: true, completion: nil)
         }
-        
-        // SUBMARK: - Delete
-        
-        let deleteAction = UITableViewRowAction(style: .default, title: "Delete") { (_ , indexPath) in
-            self.model.delete(indexPath.row)
-            self.tableView.deleteRows(at: [indexPath], with: .fade) }
+        let deleteAction = UITableViewRowAction(style: .default,
+                                                title: "Delete") { (_ , _) in
+                                                    self.model.delete(indexPath.row)
+                                                    self.tableView.deleteRows(at: [indexPath], with: .fade)
+        }
         deleteAction.backgroundColor = .red
-        editAction.backgroundColor = UIColor(hexString: "#4BB9D4")
+        editAction.backgroundColor = self.colors.editButton
         
         return [deleteAction, editAction]
     }
@@ -63,12 +63,12 @@ class TableViewController: UITableViewController {
         self.model.expand(indexPath.row)
         guard let item = self.model.notes?[indexPath.row] else { return }
         if item.isExpanded {
-            tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 0
+            self.tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 0
         } else {
-            tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 1
+            self.tableView.cellForRow(at: indexPath)?.detailTextLabel?.numberOfLines = 1
         }
-        tableView.beginUpdates()
-        tableView.endUpdates()
+        self.tableView.beginUpdates()
+        self.tableView.endUpdates()
         self.tableView.deselectRow(at: indexPath, animated: true)
     }
     
@@ -91,15 +91,12 @@ class TableViewController: UITableViewController {
         let height: NSLayoutConstraint = NSLayoutConstraint(item: alert.view!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: view.frame.height * 0.3)
         
         alert.view.addConstraint(height)
-        
-        // SUBMARK: - Elements in alert
-        
+
         alert.addTextField { (alertText) in
             alertText.placeholder = "Theme"
             titleField = alertText
         }
-        
-        let add = UIAlertAction(title: "Add", style: .default) { (action) in
+        alert.addAction(UIAlertAction(title: "Add", style: .default) { (_ ) in
             let newNote = Note()
             if titleField.text!.isEmpty {
                 newNote.title = "Empty"
@@ -111,18 +108,14 @@ class TableViewController: UITableViewController {
             } else {
                 newNote.body = textView.text!
             }
-            newNote.color = self.colors.randomElement()!
+            newNote.color = self.colors.randomColor
             self.model.create(item: newNote)
             self.tableView.reloadData()
             self.tableView.beginUpdates()
-            self.tableView.endUpdates()
-        }
-        let cancel = UIAlertAction(title: "Cancel", style: .default) { (_ ) in
+            self.tableView.endUpdates() })
+        alert.addAction(UIAlertAction(title: "Cancel", style: .default) { (_ ) in
             self.tableView.reloadData()
-        }
-        alert.addAction(add)
-        alert.addAction(cancel)
-        
+        })
         present(alert, animated: true)
     }
 }
