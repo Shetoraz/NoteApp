@@ -90,7 +90,7 @@ class TableViewController: UITableViewController {
         let alert = UIAlertController(title: R.string.localizable.newNote(), message: "", preferredStyle: .alert)
         alert.setValue(controller, forKey: "contentViewController")
         
-        let height: NSLayoutConstraint = NSLayoutConstraint(item: alert.view!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: view.frame.height * 0.3)
+        let height = NSLayoutConstraint(item: alert.view!, attribute: .height, relatedBy: .equal, toItem: nil, attribute: .notAnAttribute, multiplier: 1, constant: view.frame.height * 0.3)
         
         alert.view.addConstraint(height)
 

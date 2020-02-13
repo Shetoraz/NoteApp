@@ -8,7 +8,7 @@
 
 import UIKit
 
- public extension UITableViewCell {
-     class var reuseIdentifier: String { return String (describing: self) }
- }
+public extension UITableViewCell {
+    class var reuseIdentifier: String { return String(describing: self) }
+}
 
