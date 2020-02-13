@@ -1,0 +1,20 @@
+/* 
+  Localizable.strings
+  NoteApp
+
+  Created by Anton Asetski on 2/11/20.
+  Copyright © 2020 Anton Asetski. All rights reserved.
+*/
+
+"Welcom"   = "Welcome";
+"EditNote" = "Edit note";
+"Cancel"   =  "Cancel";
+"Save"     = "Save";
+"Delete"   = "Delete";
+"NewNote"  = "New note";
+"Topic"    = "Topic";
+"Add"      = "Add";
+"Empty"    = "Empty";
+"Edit"     = "Edit";
+"Error"    = "Error";
+"Dismiss"  = "Dismiss";
